@@ -136,8 +136,9 @@ html:not(.js) [data-view]:target { display: block; }
 /* Home */
 [data-view='home'] { overflow-x: clip; }
 /* The welcome: a sealed envelope; it opens into a letter */
-.welcome { position: relative; margin-top: clamp(2.2rem, 6vw, 4.2rem); }
-.site-header.is-home + main .welcome, .welcome { padding-top: min(150px, 34vw); }
+.welcome { position: relative; margin-top: clamp(1rem, 3vw, 2rem); }
+.welcome { padding-top: min(44px, 10vw); }
+.welcome.is-open { padding-top: 0; }
 .welcome-envelope { display: block; width: min(440px, 80vw); margin: 0 auto; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .welcome-envelope:focus-visible { outline: 2px solid var(--scarlet); outline-offset: 12px; border-radius: 6px; }
 .welcome.is-opening .welcome-envelope { pointer-events: none; position: absolute; left: 50%; top: 0; transform: translateX(-50%); z-index: 2; }
