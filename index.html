@@ -420,6 +420,8 @@ html.js .submission .step.is-current { animation: fade-up 0.4s var(--ease) both;
 .about-signoff-img { display: inline-block; width: min(300px, 62%); height: auto; }
 .about-signoff { margin: 1.6em 0 0; text-align: right; font-family: var(--display); font-style: italic; font-weight: 500; font-size: clamp(1.45rem, 3vw, 1.7rem); color: var(--ink-soft); }
 /* Footer */
+body.view-arboretum .site-footer { margin-top: 0.6rem; }
+body.view-arboretum .footer-inner { border-top: 0; padding-top: 0.6rem; }
 .site-footer { margin-top: clamp(4rem, 10vw, 6.5rem); padding-block: 1.4rem calc(2.2rem + env(safe-area-inset-bottom, 0px)); }
 .footer-inner { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.6rem; border-top: 1px solid var(--rule); padding-top: 1.4rem; }
 .footer-inner p { margin: 0; font-variant-caps: all-small-caps; letter-spacing: 0.14em; color: var(--ink-faint); font-size: 0.95rem; }
@@ -1066,7 +1068,7 @@ const Arbor = (() => {
       for (let k = 0; k < arborLetters.length; k++) { let idx = Math.floor(k * step) % around.length; while (used.has(idx)) idx = (idx + 1) % around.length; used.add(idx); slots.push(around[idx]); }
     }
     const groundY = top + rows * rowH + flareH * 0.62;
-    const H = groundY + 42;
+    const H = groundY + 16;
     return { vw, W, phone, R, envW, envH, rowH, C, cols, heart, top, carveY, flareH, flareK, k0, k1, slots, rows, groundY, H, cx: W / 2, dpr: Math.min(window.devicePixelRatio || 1, 2) };
   }
 
@@ -1971,6 +1973,7 @@ const View = (() => {
       header.classList.toggle('is-home', view === 'home');
       document.title = TITLES[view];
       if (view === 'arboretum') Arbor.start(); else Arbor.stop();
+      document.body.classList.toggle('view-arboretum', view === 'arboretum');
       const first = cur === null; cur = view;
       if (!first) $('#main').focus({ preventScroll: true });
     }
