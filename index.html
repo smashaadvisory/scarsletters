@@ -1073,13 +1073,10 @@ const Arbor = (() => {
     const place = () => { carveY = top + (rows * rowH) / 2; all = makeSlots(rows); };
     place();
     while (all.length < arborLetters.length) { rows++; place(); }
-    // spread the letters evenly around the trunk, starting beside the carving
-    const around = all.slice().sort((a, b) => ((((a.phi - CARVE + 0.35) % TAU) + TAU) % TAU) - ((((b.phi - CARVE + 0.35) % TAU) + TAU) % TAU) || a.yc - b.yc);
-    const slots = [];
-    if (arborLetters.length) {
-      const step = around.length / arborLetters.length, used = new Set();
-      for (let k = 0; k < arborLetters.length; k++) { let idx = Math.floor(k * step) % around.length; while (used.has(idx)) idx = (idx + 1) % around.length; used.add(idx); slots.push(around[idx]); }
-    }
+    // the letters gather on the side facing the visitor first, so every pinned letter can be seen without turning;
+    // the trunk's far side only fills once the front is full
+    const around = all.slice().sort((a, b) => Math.abs(normRad(a.phi - CARVE)) - Math.abs(normRad(b.phi - CARVE)) || a.yc - b.yc);
+    const slots = around.slice(0, arborLetters.length);
     const groundY = top + rows * rowH + flareH * 0.62;
     const H = groundY + 16;
     return { vw, W, phone, R, envW, envH, rowH, C, cols, heart, top, carveY, flareH, flareK, k0, k1, slots, rows, groundY, H, cx: W / 2, dpr: Math.min(window.devicePixelRatio || 1, 2) };
