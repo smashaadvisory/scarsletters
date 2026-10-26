@@ -486,7 +486,10 @@ html:not(.js) .welcome-letter { visibility: visible; }
 .booth-pages button:hover { background: rgba(60, 50, 45, 0.08); color: #2f2a27; }
 .booth-pages button[disabled] { opacity: 0.3; cursor: default; background: none; }
 .booth-side { display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-end; gap: 1.6rem; padding-bottom: 0.4rem; }
-.booth-pencil { width: 6.2rem; max-width: 100%; filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.5)); }
+.booth-pencil { width: 6.2rem; max-width: 100%; filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.5)); cursor: pointer; pointer-events: auto; }
+.booth-pencil .pencil { transform-box: fill-box; transform-origin: 50% 97%; }
+.booth-pencil.is-spinning .pencil { animation: pencil-spin 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@keyframes pencil-spin { 0% { transform: rotate(0deg) scaleX(1); } 25% { transform: rotate(-200deg) scaleX(0.35); } 50% { transform: rotate(-380deg) scaleX(1); } 75% { transform: rotate(-560deg) scaleX(0.35); } 90% { transform: rotate(-700deg) scaleX(1); } 100% { transform: rotate(-720deg) scaleX(1); } }
 .booth-pencil > svg { display: block; width: 100%; height: auto; }
 /* the envelope holder and its stack */
 .booth-holder { position: relative; width: 9rem; height: 6.6rem; filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.45)); }
@@ -511,7 +514,23 @@ html:not(.js) .welcome-letter { visibility: visible; }
 .booth-done-actions { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin: 0; }
 .booth-done .text-button { color: #f1e6d3; }
 .booth-done .text-button--scarlet { color: #e3a56a; }
-@media (max-width: 40rem) { .booth-sconce { width: 54px; left: 1%; top: 3%; } .booth-glow { width: 70vmin; height: 70vmin; left: -25%; top: -20%; } .booth-grille { width: 16vw; top: 1%; left: 20%; border-width: 7px; } .booth-slot { bottom: -24px; height: 8px; } .booth-doorway { width: 22%; } .booth-doorway::after { height: 3rem; } .booth-rod { top: 2.5rem; } .booth-curtain { top: 2.3rem; } .booth-desk { width: 93%; margin-left: 3.5%; padding-top: calc(13vh + env(safe-area-inset-top, 0px)); padding-bottom: calc(1.6rem + env(safe-area-inset-bottom, 0px)); } .booth-text { min-height: 0; height: 12.5rem; } .booth-paper { padding-bottom: 1.6rem; } .booth-fields { margin-top: 1.2rem; } .booth-table { gap: 0.6rem; } .booth-grille { top: 1.5%; } .booth-slot { bottom: -18px; height: 7px; } .booth-table { grid-template-columns: minmax(0, 1fr); gap: 1rem; } .booth-side { flex-direction: row; justify-content: space-between; align-items: flex-end; width: 100%; padding: 0.2rem 0.2rem 0; } .booth-holder { width: 6.4rem; height: 4.6rem; } .booth-holder-back { height: 3rem; } .booth-holder-front { height: 2rem; } .booth-stack { height: 3.6rem; bottom: 0.5rem; } .booth-env { width: 4rem; } .booth-pencil { width: 3.6rem; } .booth-side { padding-top: 0; } }
+@media (max-width: 40rem) {
+  .booth-sconce { width: 54px; left: 1%; top: 3%; } .booth-glow { width: 70vmin; height: 70vmin; left: -25%; top: -20%; }
+  .booth-grille { width: 15vw; top: 1.5%; left: 22%; border-width: 6px; } .booth-slot { bottom: -18px; height: 7px; }
+  .booth-doorway { width: 22%; } .booth-doorway::after { height: 3rem; } .booth-rod { top: 2.5rem; } .booth-curtain { top: 2.3rem; }
+  /* the whole screen is the booth: the page fills what the table leaves, and Send sits at the foot */
+  .booth-inside { overflow: hidden; }
+  .booth-desk { box-sizing: border-box; width: 93%; margin-left: 3.5%; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; padding: calc(4.2rem + env(safe-area-inset-top, 0px)) 0 calc(1.2rem + env(safe-area-inset-bottom, 0px)); }
+  .booth-desk::before { height: 30vh; height: 30svh; }
+  .booth-form { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+  .booth-table { flex: 1; display: flex; flex-direction: column; min-height: 0; gap: 0.6rem; }
+  .booth-paper { flex: 1; display: flex; flex-direction: column; min-height: 0; padding-bottom: 1.6rem; }
+  .booth-text { flex: 1; min-height: 0; height: auto; }
+  .booth-side { flex: none; flex-direction: row; justify-content: space-between; align-items: flex-end; width: 100%; padding: 0.2rem 0.4rem 0; gap: 0; }
+  .booth-holder { width: 6.4rem; height: 4.6rem; } .booth-holder-back { height: 3rem; } .booth-holder-front { height: 2rem; } .booth-stack { height: 3.6rem; bottom: 0.5rem; } .booth-env { width: 4rem; } .booth-pencil { width: 3.6rem; }
+  .booth-fields { flex: none; margin-top: 1rem; }
+  .booth-done { padding-top: 22vh; }
+}
 @media (prefers-reduced-motion: reduce) { .booth-curtain, .booth-desk, .booth-leave, .booth-door, .booth-env, .booth-dim, .booth-text { transition: none !important; animation: none !important; } .booth-glow, .booth-sconce .flame, .booth-sconce .flame-core, .booth-sconce .flame-halo { animation: none !important; } }
 
 /* Submissions */
@@ -2235,18 +2254,19 @@ function boothPencilSvg() {
     <pattern id="rib" width="40" height="2.6" patternUnits="userSpaceOnUse"><rect width="40" height="1.1" fill="rgba(0,0,0,0.28)"/><rect y="1.1" width="40" height="0.6" fill="rgba(255,255,255,0.35)"/></pattern>
   </defs>
   <!-- the chain, from the cap to the holder -->
-  <path d="M74 28C98 60 104 120 92 184" fill="none" stroke="rgba(30,30,30,0.7)" stroke-width="2.4" stroke-linecap="round"/>
-  <path d="M74 28C98 60 104 120 92 184" fill="none" stroke="#d9d9d6" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="1.8 2.6"/>
+  <path d="M66 24C96 56 106 120 92 184" fill="none" stroke="rgba(30,30,30,0.7)" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M66 24C96 56 106 120 92 184" fill="none" stroke="#d9d9d6" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="1.8 2.6"/>
   <circle cx="92" cy="186" r="4" fill="none" stroke="#cfcfcc" stroke-width="2"/>
-  <!-- the pencil, standing a little askew -->
-  <g transform="translate(58 20) rotate(7)">
+  <ellipse cx="60" cy="178" rx="30" ry="7" fill="#1a0a07"/>
+  <!-- the pencil, standing a little askew in the cup -->
+  <g transform="translate(68 196) rotate(-7) translate(-10 -176)"><g class="pencil">
     <rect x="-9" y="0" width="18" height="30" rx="3" fill="url(#ps)"/><rect x="-9" y="0" width="18" height="30" rx="3" fill="url(#rib)"/><rect x="-9" y="6" width="18" height="2" fill="rgba(40,40,40,0.4)"/><circle cx="0" cy="-2" r="3" fill="none" stroke="#cfcfcc" stroke-width="1.6"/>
     <rect x="-8" y="30" width="16" height="130" fill="url(#pw)"/><rect x="-2.5" y="30" width="2" height="130" fill="rgba(255,235,200,0.3)"/><rect x="5" y="30" width="1.2" height="130" fill="rgba(60,30,10,0.22)"/>
     <polygon points="-8,160 8,160 2.5,186 -2.5,186" fill="url(#pc)"/><polygon points="-2.5,186 2.5,186 0,196" fill="#3a3a38"/>
-  </g>
+  </g></g>
   <!-- the holder -->
   <ellipse cx="60" cy="226" rx="34" ry="8" fill="rgba(0,0,0,0.35)"/>
-  <path d="M30 178h60v40q0 10-30 10t-30-10z" fill="url(#ph)"/><ellipse cx="60" cy="178" rx="30" ry="7" fill="#1a0a07"/><ellipse cx="60" cy="178" rx="30" ry="7" fill="none" stroke="url(#ps)" stroke-width="2.4"/><path d="M33 190q27 8 54 0" fill="none" stroke="rgba(255,205,160,0.18)" stroke-width="1"/>
+  <path d="M30 178h60v40q0 10-30 10t-30-10z" fill="url(#ph)"/><path d="M30 178a30 7 0 0 0 60 0" fill="#3a1a12"/><path d="M30 178a30 7 0 0 0 60 0" fill="none" stroke="url(#ps)" stroke-width="2.4"/><path d="M30 178a30 7 0 0 1 60 0" fill="none" stroke="url(#ps)" stroke-width="1.6" opacity="0.7"/><path d="M33 190q27 8 54 0" fill="none" stroke="rgba(255,205,160,0.18)" stroke-width="1"/>
   </svg>`;
 }
 /* A small oil lamp on an iron bracket; the flame is animated in CSS */
@@ -2285,6 +2305,7 @@ const Booth = (() => {
   document.body.appendChild(inside); // out of <main>, which goes inert while the booth is occupied
   document.documentElement.style.setProperty('--lace', `url("${LACE_URI}")`);
   $('[data-booth-pencil]').innerHTML = boothPencilSvg();
+  { const pen = $('[data-booth-pencil]'); pen.addEventListener('click', () => { if (reduced() || pen.classList.contains('is-spinning')) return; pen.classList.add('is-spinning'); setTimeout(() => pen.classList.remove('is-spinning'), 1150); }); }
   $('[data-booth-sconce]').innerHTML = boothSconceSvg();
   { const pts = []; for (let y = 0; y <= 100; y += 0.5) pts.push(`${f2(5 + 2.2 * Math.sin(y / 100 * Math.PI * 4.5) + 0.7 * Math.sin(y / 100 * Math.PI * 11))}% ${f2(y)}%`);
     for (let x = 8; x <= 100; x += 0.5) pts.push(`${x}% ${f2(100 - 0.8 - 0.8 * Math.cos(x / 100 * Math.PI * 10))}%`);
@@ -2411,6 +2432,9 @@ const Booth = (() => {
   prevBtn.addEventListener('click', () => { if (cur > 0) showPage(cur - 1); });
   nextBtn.addEventListener('click', () => { if (cur === pages.length - 1) { if (!text.value.trim()) return; pages.push(''); } showPage(cur + 1); });
   text.addEventListener('input', updatePages); updatePages();
+  // on a phone the sheet is sized by the screen, not by its rows
+  const fitRows = () => { text.rows = window.matchMedia('(max-width: 40rem)').matches ? 4 : 16; };
+  fitRows(); window.addEventListener('resize', fitRows);
   function allPages() { pages[cur] = text.value; return pages.map((p) => p.trim()).filter(Boolean).join('\n\n⁂\n\n'); }
   function resetPages() { pages = ['']; cur = 0; text.value = ''; updatePages(); }
   /* firelight: a flame is never steady, so neither is anything it lights */
