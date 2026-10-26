@@ -2254,13 +2254,13 @@ function boothPencilSvg() {
     <pattern id="rib" width="40" height="2.6" patternUnits="userSpaceOnUse"><rect width="40" height="1.1" fill="rgba(0,0,0,0.28)"/><rect y="1.1" width="40" height="0.6" fill="rgba(255,255,255,0.35)"/></pattern>
   </defs>
   <!-- the chain, from the cap to the holder -->
-  <path d="M66 24C96 56 106 120 92 184" fill="none" stroke="rgba(30,30,30,0.7)" stroke-width="2.4" stroke-linecap="round"/>
-  <path d="M66 24C96 56 106 120 92 184" fill="none" stroke="#d9d9d6" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="1.8 2.6"/>
-  <circle cx="92" cy="186" r="4" fill="none" stroke="#cfcfcc" stroke-width="2"/>
+  <path class="chain" d="M36 21C70 40 104 110 94 180" fill="none" stroke="rgba(30,30,30,0.7)" stroke-width="2.4" stroke-linecap="round"/>
+  <path class="chain" d="M36 21C70 40 104 110 94 180" fill="none" stroke="#d9d9d6" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="1.8 2.6"/>
+  <circle cx="94" cy="182" r="3.6" fill="none" stroke="#cfcfcc" stroke-width="2"/>
   <path d="M30 178a30 7 0 0 1 60 0a30 7 0 0 1-60 0z" fill="#1a0a07"/><path d="M30 178a30 7 0 0 1 60 0" fill="none" stroke="url(#ps)" stroke-width="2.2"/>
   <!-- the pencil, standing a little askew in the cup -->
   <g transform="translate(66 206) rotate(-7) translate(-10 -186)"><g class="pencil">
-    <rect x="-9" y="0" width="18" height="30" rx="3" fill="url(#ps)"/><rect x="-9" y="0" width="18" height="30" rx="3" fill="url(#rib)"/><rect x="-9" y="6" width="18" height="2" fill="rgba(40,40,40,0.4)"/><circle cx="0" cy="-2" r="3" fill="none" stroke="#cfcfcc" stroke-width="1.6"/>
+    <rect x="-9" y="0" width="18" height="30" rx="3" fill="url(#ps)"/><rect x="-9" y="0" width="18" height="30" rx="3" fill="url(#rib)"/><rect x="-9" y="6" width="18" height="2" fill="rgba(40,40,40,0.4)"/><circle class="cap-ring" cx="0" cy="-2" r="3" fill="none" stroke="#cfcfcc" stroke-width="1.6"/>
     <rect x="-8" y="30" width="16" height="130" fill="url(#pw)"/><rect x="-2.5" y="30" width="2" height="130" fill="rgba(255,235,200,0.3)"/><rect x="5" y="30" width="1.2" height="130" fill="rgba(60,30,10,0.22)"/>
     <polygon points="-8,160 8,160 2.5,186 -2.5,186" fill="url(#pc)"/><polygon points="-2.5,186 2.5,186 0,196" fill="#3a3a38"/>
   </g></g>
@@ -2305,7 +2305,20 @@ const Booth = (() => {
   document.body.appendChild(inside); // out of <main>, which goes inert while the booth is occupied
   document.documentElement.style.setProperty('--lace', `url("${LACE_URI}")`);
   $('[data-booth-pencil]').innerHTML = boothPencilSvg();
-  { const pen = $('[data-booth-pencil]'); pen.addEventListener('click', () => { if (reduced() || pen.classList.contains('is-spinning')) return; pen.classList.add('is-spinning'); setTimeout(() => pen.classList.remove('is-spinning'), 1350); }); }
+  { // the chain hangs from wherever the cap is, so it follows the pencil as it swirls
+    const pen = $('[data-booth-pencil]'), svg = pen.querySelector('svg'), ring = pen.querySelector('.cap-ring'), chains = $$('.chain', pen);
+    const hang = () => {
+      const m = svg.getScreenCTM(); if (!m) return;
+      const r = ring.getBoundingClientRect(), p = new DOMPoint(r.left + r.width / 2, r.top + r.height / 2).matrixTransform(m.inverse());
+      const x = p.x, y = p.y, ex = 94, ey = 180, sag = 26 + Math.max(0, 40 - Math.abs(ex - x)) * 0.4;
+      const d = `M${f2(x)} ${f2(y)}C${f2(x + (ex - x) * 0.35)} ${f2(y + sag)} ${f2(ex + (x - ex) * 0.12)} ${f2(ey - (ey - y) * 0.42)} ${ex} ${ey}`;
+      chains.forEach((c) => c.setAttribute('d', d));
+    };
+    let spinning = 0;
+    const follow = () => { hang(); if (spinning) requestAnimationFrame(follow); };
+    pen.addEventListener('click', () => { if (reduced() || spinning) return; pen.classList.add('is-spinning'); spinning = 1; follow(); setTimeout(() => { pen.classList.remove('is-spinning'); spinning = 0; hang(); }, 1350); });
+    document.addEventListener('viewchange', () => setTimeout(hang, 0)); window.addEventListener('resize', hang); setTimeout(hang, 0);
+  }
   $('[data-booth-sconce]').innerHTML = boothSconceSvg();
   const table = $('[data-booth-table]'), stack = $('[data-booth-stack]'), envelope = $('[data-booth-envelope]'), slot = $('[data-booth-slot]');
   const STACK = 5, rnd = (() => { const a = new Uint32Array(1); return () => (crypto.getRandomValues(a)[0] / 4294967296); })();
