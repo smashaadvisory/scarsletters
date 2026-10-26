@@ -430,7 +430,7 @@ html:not(.js) .welcome-letter { visibility: visible; }
   opacity: 0; transition: opacity 0.9s ease; }
 .booth-inside.is-shown { opacity: 1; }
 .booth-inside button, .booth-inside input, .booth-inside textarea, .booth-inside .booth-title, .booth-inside .booth-text, .booth-inside .booth-done-title, .booth-inside .booth-plaque-line { font-family: var(--font) !important; }
-.booth-walls { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.booth-walls { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
 /* the sconce at the far left, its flame never quite still */
 .booth-sconce { position: absolute; left: 2%; top: 3%; width: clamp(64px, 7.5vw, 110px); z-index: 2; }
 .booth-sconce > svg { display: block; width: 100%; height: auto; overflow: visible; }
@@ -511,7 +511,7 @@ html:not(.js) .welcome-letter { visibility: visible; }
 .booth-done-actions { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin: 0; }
 .booth-done .text-button { color: #f1e6d3; }
 .booth-done .text-button--scarlet { color: #e3a56a; }
-@media (max-width: 40rem) { .booth-sconce { width: 54px; left: 1%; top: 3%; } .booth-glow { width: 70vmin; height: 70vmin; left: -25%; top: -20%; } .booth-grille { width: 16vw; top: 1%; left: 20%; border-width: 7px; } .booth-slot { bottom: -24px; height: 8px; } .booth-doorway { width: 22%; } .booth-doorway::after { height: 3rem; } .booth-rod { top: 2.5rem; } .booth-curtain { top: 2.3rem; } .booth-desk { width: 93%; margin-left: 3.5%; padding-top: calc(18vh + env(safe-area-inset-top, 0px)); } .booth-text { min-height: 17rem; } .booth-table { grid-template-columns: minmax(0, 1fr); gap: 1rem; } .booth-side { flex-direction: row; justify-content: space-between; align-items: flex-end; width: 100%; padding: 0.2rem 0.2rem 0; } .booth-holder { width: 7.6rem; height: 5.8rem; } .booth-stack { height: 4.6rem; } .booth-env { width: 4.8rem; } .booth-pencil { width: 4.6rem; } }
+@media (max-width: 40rem) { .booth-sconce { width: 54px; left: 1%; top: 3%; } .booth-glow { width: 70vmin; height: 70vmin; left: -25%; top: -20%; } .booth-grille { width: 16vw; top: 1%; left: 20%; border-width: 7px; } .booth-slot { bottom: -24px; height: 8px; } .booth-doorway { width: 22%; } .booth-doorway::after { height: 3rem; } .booth-rod { top: 2.5rem; } .booth-curtain { top: 2.3rem; } .booth-desk { width: 93%; margin-left: 3.5%; padding-top: calc(13vh + env(safe-area-inset-top, 0px)); padding-bottom: calc(1.6rem + env(safe-area-inset-bottom, 0px)); } .booth-text { min-height: 0; height: 12.5rem; } .booth-paper { padding-bottom: 1.6rem; } .booth-fields { margin-top: 1.2rem; } .booth-table { gap: 0.6rem; } .booth-grille { top: 1.5%; } .booth-slot { bottom: -18px; height: 7px; } .booth-table { grid-template-columns: minmax(0, 1fr); gap: 1rem; } .booth-side { flex-direction: row; justify-content: space-between; align-items: flex-end; width: 100%; padding: 0.2rem 0.2rem 0; } .booth-holder { width: 6.4rem; height: 4.6rem; } .booth-holder-back { height: 3rem; } .booth-holder-front { height: 2rem; } .booth-stack { height: 3.6rem; bottom: 0.5rem; } .booth-env { width: 4rem; } .booth-pencil { width: 3.6rem; } .booth-side { padding-top: 0; } }
 @media (prefers-reduced-motion: reduce) { .booth-curtain, .booth-desk, .booth-leave, .booth-door, .booth-env, .booth-dim, .booth-text { transition: none !important; animation: none !important; } .booth-glow, .booth-sconce .flame, .booth-sconce .flame-core, .booth-sconce .flame-halo { animation: none !important; } }
 
 /* Submissions */
@@ -2286,8 +2286,8 @@ const Booth = (() => {
   document.documentElement.style.setProperty('--lace', `url("${LACE_URI}")`);
   $('[data-booth-pencil]').innerHTML = boothPencilSvg();
   $('[data-booth-sconce]').innerHTML = boothSconceSvg();
-  { const pts = []; for (let y = 0; y <= 100; y += 2.5) pts.push(`${f2(5 + 2.2 * Math.sin(y / 100 * Math.PI * 4.5) + 0.9 * Math.sin(y / 100 * Math.PI * 11))}% ${f2(y)}%`);
-    for (let x = 8; x <= 100; x += 2) pts.push(`${x}% ${f2(100 - 0.8 - 0.8 * Math.cos(x / 100 * Math.PI * 10))}%`);
+  { const pts = []; for (let y = 0; y <= 100; y += 0.5) pts.push(`${f2(5 + 2.2 * Math.sin(y / 100 * Math.PI * 4.5) + 0.7 * Math.sin(y / 100 * Math.PI * 11))}% ${f2(y)}%`);
+    for (let x = 8; x <= 100; x += 0.5) pts.push(`${x}% ${f2(100 - 0.8 - 0.8 * Math.cos(x / 100 * Math.PI * 10))}%`);
     pts.push('100% 0%'); $('.booth-curtain').style.clipPath = `polygon(${pts.join(', ')})`; }
   const table = $('[data-booth-table]'), stack = $('[data-booth-stack]'), envelope = $('[data-booth-envelope]'), slot = $('[data-booth-slot]');
   const STACK = 5, rnd = (() => { const a = new Uint32Array(1); return () => (crypto.getRandomValues(a)[0] / 4294967296); })();
@@ -2341,7 +2341,8 @@ const Booth = (() => {
     // 4. into the pocket, and the flap comes down over it
     env.classList.remove('env--paper-out'); await wait(700);
     env.classList.remove('env--open'); await wait(760);
-    // 5. carried to the slot beneath the grille: up, across, and in
+    // 5. carried to the slot beneath the grille: up, across, and in (the room scrolls up first if the slot is out of sight)
+    if (slot.getBoundingClientRect().top < 0) { inside.scrollTo({ top: 0, behavior: 'smooth' }); await wait(560); }
     const sr = slot.getBoundingClientRect(), ef = envelope.getBoundingClientRect();
     const s = Math.min(1, (sr.width * 1.12) / ef.width), h = ef.height * s;
     const fx = (sr.left + sr.width / 2) - (ef.left + ef.width / 2), fy = (sr.top + 2 - h / 2) - (ef.top + ef.height / 2);
