@@ -2328,27 +2328,31 @@ const Booth = (() => {
   document.documentElement.style.setProperty('--lace', `url("${LACE_URI}")`);
 
   $('[data-booth-pencil]').innerHTML = boothPencilSvg();
-  /* the lantern, heard: a low hush of flame with the occasional soft crackle */
+  /* the lantern, heard: only the occasional soft crackle, nothing else */
   const Flame = (() => {
-    let ctx = null, master = null, timer = 0;
+    let ctx = null, master = null, buf = null, timer = 0;
+    function noise() { const len = ctx.sampleRate, b = ctx.createBuffer(1, len, ctx.sampleRate), d = b.getChannelData(0); for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1; return b; }
+    function crackle() {
+      const t = ctx.currentTime, n = 1 + (Math.random() < 0.35 ? 1 + Math.floor(Math.random() * 2) : 0);
+      for (let k = 0; k < n; k++) {
+        const at = t + k * (0.03 + Math.random() * 0.09), src = ctx.createBufferSource(); src.buffer = buf;
+        const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1400 + Math.random() * 3200; bp.Q.value = 5 + Math.random() * 6;
+        const g = ctx.createGain(); g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(0.25 + Math.random() * 0.55, at + 0.003); g.gain.exponentialRampToValueAtTime(0.0005, at + 0.02 + Math.random() * 0.06);
+        src.connect(bp); bp.connect(g); g.connect(master); src.start(at, Math.random() * 0.8); src.stop(at + 0.15);
+      }
+    }
+    function schedule() { if (!master) return; timer = setTimeout(() => { crackle(); schedule(); }, 900 + Math.random() * 3600); }
     function start() {
       try {
-        if (!ctx) { ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+        if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
         if (ctx.state === 'suspended') ctx.resume();
         if (master) return;
-        master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
-        const len = ctx.sampleRate * 2, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
-        let b0 = 0, b1 = 0, b2 = 0; for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1; b0 = 0.99765 * b0 + w * 0.099; b1 = 0.963 * b1 + w * 0.2965; b2 = 0.57 * b2 + w * 1.0526; d[i] = (b0 + b1 + b2 + w * 0.1848) * 0.08; }
-        const hush = ctx.createBufferSource(); hush.buffer = buf; hush.loop = true;
-        const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 900; lp.Q.value = 0.4;
-        const breathe = ctx.createGain(); breathe.gain.value = 0.6;
-        hush.connect(lp); lp.connect(breathe); breathe.connect(master); hush.start();
-        const sway = () => { if (!master) return; const t = ctx.currentTime; breathe.gain.cancelScheduledValues(t); breathe.gain.setTargetAtTime(0.35 + Math.random() * 0.5, t, 0.25 + Math.random() * 0.4); if (Math.random() < 0.3) crackle(); timer = setTimeout(sway, 180 + Math.random() * 420); };
-        const crackle = () => { const t = ctx.currentTime, src = ctx.createBufferSource(); src.buffer = buf; src.playbackRate.value = 1.6 + Math.random() * 1.4; const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1800 + Math.random() * 2600; bp.Q.value = 6; const g = ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.5 + Math.random() * 0.7, t + 0.004); g.gain.exponentialRampToValueAtTime(0.001, t + 0.03 + Math.random() * 0.05); src.connect(bp); bp.connect(g); g.connect(master); src.start(t, Math.random() * 1.5); src.stop(t + 0.12); };
-        master.gain.setTargetAtTime(0.045, ctx.currentTime, 1.2); sway();
+        if (!buf) buf = noise();
+        master = ctx.createGain(); master.gain.value = 0.11; master.connect(ctx.destination);
+        timer = setTimeout(() => { crackle(); schedule(); }, 1800 + Math.random() * 1500);
       } catch (_) {}
     }
-    function stop() { if (!master || !ctx) return; clearTimeout(timer); const m = master; master = null; m.gain.setTargetAtTime(0, ctx.currentTime, 0.4); setTimeout(() => { try { m.disconnect(); } catch (_) {} }, 1500); }
+    function stop() { clearTimeout(timer); if (!master || !ctx) return; const m = master; master = null; m.gain.setTargetAtTime(0, ctx.currentTime, 0.2); setTimeout(() => { try { m.disconnect(); } catch (_) {} }, 800); }
     return { start, stop };
   })();
   let hangChain = null;
