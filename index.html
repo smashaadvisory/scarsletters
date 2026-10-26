@@ -2328,32 +2328,50 @@ const Booth = (() => {
   document.documentElement.style.setProperty('--lace', `url("${LACE_URI}")`);
 
   $('[data-booth-pencil]').innerHTML = boothPencilSvg();
-  /* the lantern, heard: only the occasional soft crackle, nothing else */
+  /* the lantern, heard: a very low, quick-fluttering ember glow, and pops and snaps of burning wood */
   const Flame = (() => {
-    let ctx = null, master = null, buf = null, timer = 0;
-    function noise() { const len = ctx.sampleRate, b = ctx.createBuffer(1, len, ctx.sampleRate), d = b.getChannelData(0); for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1; return b; }
-    function crackle() {
-      const t = ctx.currentTime, n = 1 + (Math.random() < 0.35 ? 1 + Math.floor(Math.random() * 2) : 0);
-      for (let k = 0; k < n; k++) {
-        const at = t + k * (0.03 + Math.random() * 0.09), src = ctx.createBufferSource(); src.buffer = buf;
-        const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1400 + Math.random() * 3200; bp.Q.value = 5 + Math.random() * 6;
-        const g = ctx.createGain(); g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(0.25 + Math.random() * 0.55, at + 0.003); g.gain.exponentialRampToValueAtTime(0.0005, at + 0.02 + Math.random() * 0.06);
-        src.connect(bp); bp.connect(g); g.connect(master); src.start(at, Math.random() * 0.8); src.stop(at + 0.15);
-      }
+    let ctx = null, master = null, noiseBuf = null, timer = 0, flutter = 0;
+    function noise() { const len = ctx.sampleRate * 2, b = ctx.createBuffer(1, len, ctx.sampleRate), d = b.getChannelData(0); let last = 0; for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1; last = (last + 0.02 * w) / 1.02; d[i] = last * 3.5; } return b; }
+    function pop(at, strength) {
+      // the snap: a few milliseconds of bright noise
+      const src = ctx.createBufferSource(); src.buffer = noiseBuf; src.playbackRate.value = 3 + Math.random() * 3;
+      const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 1800 + Math.random() * 2500; hp.Q.value = 0.7;
+      const g = ctx.createGain(); g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(strength, at + 0.0015); g.gain.exponentialRampToValueAtTime(0.0005, at + 0.006 + Math.random() * 0.014);
+      src.connect(hp); hp.connect(g); g.connect(master); src.start(at, Math.random() * 1.5); src.stop(at + 0.05);
+      // the body of it: a low knock
+      const o = ctx.createOscillator(); o.type = 'sine'; const f0 = 120 + Math.random() * 260; o.frequency.setValueAtTime(f0 * 1.6, at); o.frequency.exponentialRampToValueAtTime(f0, at + 0.02);
+      const og = ctx.createGain(); og.gain.setValueAtTime(0, at); og.gain.linearRampToValueAtTime(strength * 0.5, at + 0.002); og.gain.exponentialRampToValueAtTime(0.0005, at + 0.03 + Math.random() * 0.04);
+      o.connect(og); og.connect(master); o.start(at); o.stop(at + 0.09);
     }
-    function schedule() { if (!master) return; timer = setTimeout(() => { crackle(); schedule(); }, 900 + Math.random() * 3600); }
+    function crackle() {
+      const t = ctx.currentTime, big = Math.random() < 0.18, n = big ? 1 : 1 + Math.floor(Math.random() * 4);
+      let at = t + 0.01; for (let k = 0; k < n; k++) { pop(at, big ? 0.9 : 0.25 + Math.random() * 0.45); at += 0.012 + Math.random() * 0.07; }
+    }
+    function schedule() { if (!master) return; timer = setTimeout(() => { crackle(); schedule(); }, 350 + Math.random() * 1900); }
     function start() {
       try {
         if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
         if (ctx.state === 'suspended') ctx.resume();
         if (master) return;
-        if (!buf) buf = noise();
-        master = ctx.createGain(); master.gain.value = 0.11; master.connect(ctx.destination);
-        timer = setTimeout(() => { crackle(); schedule(); }, 1800 + Math.random() * 1500);
+        if (!noiseBuf) noiseBuf = noise();
+        master = ctx.createGain(); master.gain.value = 0.55; master.connect(ctx.destination);
+        // the ember bed: deep, quiet, and fluttering fast, nothing like wind
+        const bed = ctx.createBufferSource(); bed.buffer = noiseBuf; bed.loop = true;
+        const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 260; lp.Q.value = 0.5;
+        const bg = ctx.createGain(); bg.gain.value = 0; bed.connect(lp); lp.connect(bg); bg.connect(master); bed.start();
+        const step = () => { if (!master) return; const now = ctx.currentTime; bg.gain.setTargetAtTime(0.02 + Math.random() * 0.07, now, 0.018); flutter = setTimeout(step, 30 + Math.random() * 60); }; step();
+        timer = setTimeout(() => { crackle(); schedule(); }, 900 + Math.random() * 900);
       } catch (_) {}
     }
-    function stop() { clearTimeout(timer); if (!master || !ctx) return; const m = master; master = null; m.gain.setTargetAtTime(0, ctx.currentTime, 0.2); setTimeout(() => { try { m.disconnect(); } catch (_) {} }, 800); }
-    return { start, stop };
+    function prime() {
+      try {
+        if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+        if (ctx.state === 'suspended') ctx.resume();
+        const b = ctx.createBuffer(1, 1, ctx.sampleRate), src = ctx.createBufferSource(); src.buffer = b; src.connect(ctx.destination); src.start(0);
+      } catch (_) {}
+    }
+    function stop() { clearTimeout(timer); clearTimeout(flutter); if (!master || !ctx) return; const m = master; master = null; m.gain.setTargetAtTime(0, ctx.currentTime, 0.2); setTimeout(() => { try { m.disconnect(); } catch (_) {} }, 800); }
+    return { start, stop, prime };
   })();
   let hangChain = null;
   { // the chain hangs from wherever the cap is, so it follows the pencil as it swirls
@@ -2529,7 +2547,7 @@ const Booth = (() => {
     if (!reduced()) { try { await ceremony(); } catch (_) {} }
     form.hidden = true; done.hidden = false; done.focus({ preventScroll: true }); inside.scrollTop = 0;
   }
-  enter.addEventListener('click', enterBooth);
+  enter.addEventListener('click', () => { Flame.prime(); enterBooth(); });
   sendBtn.addEventListener('click', send); // a click, not a submit: sandboxed previews block form submission
   form.addEventListener('submit', send);
   $$('[data-booth-leave]').forEach((b) => b.addEventListener('click', () => { leave(false); setTimeout(reset, 1000); }));
