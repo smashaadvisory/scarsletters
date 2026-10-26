@@ -516,19 +516,19 @@ html:not(.js) .welcome-letter { visibility: visible; }
 .booth-done .text-button--scarlet { color: #e3a56a; }
 @media (max-width: 40rem) {
   .booth-sconce { width: 54px; left: 1%; top: 3%; } .booth-glow { width: 70vmin; height: 70vmin; left: -25%; top: -20%; }
-  .booth-grille { width: 15vw; top: 1.5%; left: 22%; border-width: 6px; } .booth-slot { bottom: -18px; height: 7px; }
+  .booth-grille { width: 13vw; top: 1.2%; left: 24%; border-width: 5px; } .booth-slot { bottom: -15px; height: 6px; }
   .booth-doorway { width: 22%; } .booth-doorway::after { height: 3rem; } .booth-rod { top: 2.5rem; } .booth-curtain { top: 2.3rem; }
   /* the whole screen is the booth: the page fills what the table leaves, and Send sits at the foot */
   .booth-inside { overflow: hidden; }
-  .booth-desk { box-sizing: border-box; width: 93%; margin-left: 3.5%; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; padding: calc(4.2rem + env(safe-area-inset-top, 0px)) 0 calc(1.2rem + env(safe-area-inset-bottom, 0px)); }
-  .booth-desk::before { height: 30vh; height: 30svh; }
+  .booth-desk { box-sizing: border-box; width: 93%; margin-left: 3.5%; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; padding: calc(3.6rem + env(safe-area-inset-top, 0px)) 0 calc(0.9rem + env(safe-area-inset-bottom, 0px)); }
+  .booth-desk::before { height: 21vh; height: 21svh; }
   .booth-form { flex: 1; display: flex; flex-direction: column; }
   .booth-table { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.6rem; }
   .booth-paper { padding-bottom: 1.6rem; }
-  .booth-text { height: calc(100vh - 22.5rem); height: calc(100svh - 22.5rem); min-height: 9rem; }
-  .booth-fields { margin-top: auto; padding-top: 0.6rem; }
+  .booth-text { height: calc(100vh - 20.3rem); height: calc(100svh - 20.3rem); min-height: 9rem; }
+  .booth-fields { margin-top: auto; padding-top: 0.4rem; }
   .booth-side { flex: none; flex-direction: row; justify-content: space-between; align-items: flex-end; width: 100%; padding: 0.2rem 0.4rem 0; gap: 0; }
-  .booth-holder { width: 6.4rem; height: 4.6rem; } .booth-holder-back { height: 3rem; } .booth-holder-front { height: 2rem; } .booth-stack { height: 3.6rem; bottom: 0.5rem; } .booth-env { width: 4rem; } .booth-pencil { width: 3.6rem; }
+  .booth-holder { width: 5.4rem; height: 3.8rem; } .booth-holder-back { height: 2.5rem; } .booth-holder-front { height: 1.7rem; } .booth-stack { height: 3rem; bottom: 0.4rem; left: 0.6rem; } .booth-env { width: 3.5rem; } .booth-pencil { width: 3rem; }
   .booth-done { padding-top: 22vh; }
 }
 @media (prefers-reduced-motion: reduce) { .booth-curtain, .booth-desk, .booth-leave, .booth-door, .booth-env, .booth-dim, .booth-text { transition: none !important; animation: none !important; } .booth-glow, .booth-sconce .flame, .booth-sconce .flame-core, .booth-sconce .flame-halo { animation: none !important; } }
