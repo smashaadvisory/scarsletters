@@ -292,6 +292,21 @@ html:not(.js) .welcome-letter { visibility: visible; }
 .filter-button:hover, .filter-button:focus-visible { color: var(--ink); background: rgba(166, 56, 70, 0.05); }
 .filter-button[aria-pressed='true'] { color: var(--scarlet); }
 .random-button { font-size: 1.14rem; }
+/* every confession, in a row each, under a dropdown in the Arboretum */
+.confess-index { position: relative; }
+.confess-toggle { color: var(--ink-soft); font-size: 1.14rem; }
+.confess-caret { display: inline-block; width: 0.42em; height: 0.42em; margin-left: 0.35em; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: translateY(-0.18em) rotate(45deg); transition: transform 0.25s var(--ease); }
+.confess-toggle[aria-expanded='true'] .confess-caret { transform: translateY(0.05em) rotate(-135deg); }
+.confess-panel { position: absolute; z-index: 30; left: 0; top: calc(100% + 0.5rem); width: min(40rem, calc(100vw - 32px)); max-height: min(62vh, 34rem); overflow-y: auto; -webkit-overflow-scrolling: touch; background: var(--paper); box-shadow: 0 0 0 1px var(--rule-strong), 0 22px 40px -20px rgba(40, 25, 20, 0.5); animation: fade-up 0.25s var(--ease) both; }
+.confess-list { list-style: none; margin: 0; padding: 0.3rem 0; counter-reset: c; }
+.confess-list li + li { border-top: 1px solid var(--rule); }
+.confess-list a { display: grid; grid-template-columns: 2.2rem minmax(0, 1fr) auto; align-items: baseline; gap: 0 1rem; padding: 0.8rem 1.2rem; min-height: 44px; color: var(--ink); text-decoration: none; transition: background 0.2s; }
+.confess-list a:hover, .confess-list a:focus-visible { background: rgba(166, 56, 70, 0.05); outline: none; }
+.confess-list a:hover .confess-title { color: var(--scarlet); }
+.confess-num { font-variant-numeric: oldstyle-nums; color: var(--ink-soft); font-size: 0.95rem; }
+.confess-title { font-family: var(--display); font-weight: 500; font-size: 1.32rem; line-height: 1.2; transition: color 0.2s; }
+.confess-date { font-variant-caps: all-small-caps; letter-spacing: 0.1em; color: var(--ink-soft); font-size: 0.98rem; white-space: nowrap; }
+@media (max-width: 40rem) { .confess-list a { grid-template-columns: 1.6rem minmax(0, 1fr); padding: 0.75rem 1rem; } .confess-date { grid-column: 2; } .confess-panel { left: -2px; } }
 @media (max-width: 40rem) { .tree-controls { gap: 0 1.4rem; } }
 .archive { list-style: none; margin: clamp(1.4rem, 4vw, 2.4rem) 0 0; padding: 0; }
 .archive-item { border-bottom: 1px solid var(--rule); }
@@ -400,7 +415,7 @@ html:not(.js) .welcome-letter { visibility: visible; }
 /* The Confession Booth */
 .booth { position: relative; }
 .booth { margin-top: clamp(0.4rem, 2vw, 1.4rem); }
-.booth-scene { position: relative; width: min(94vw, calc(var(--booth-room, 60vh) * 0.8), 860px); min-width: min(94vw, 300px); margin: 0 auto; padding-bottom: 0.6rem; }
+.booth-scene { position: relative; width: min(94vw, calc(var(--booth-room, 60vh) * 0.8), 860px); min-width: min(94vw, 220px); margin: 0 auto; padding-bottom: 0; }
 .booth-scene::before { content: ''; position: absolute; z-index: 0; left: 6%; right: 6%; top: 24%; bottom: 10%; background: radial-gradient(60% 50% at 50% 100%, rgba(40, 20, 12, 0.5), rgba(40, 20, 12, 0.22) 55%, rgba(40, 20, 12, 0) 100%); filter: blur(22px); transform: translateY(5%); transition: opacity 0.6s ease, transform 0.5s var(--ease); pointer-events: none; }
 .booth-scene:hover::before { transform: translateY(6%) scale(1.03); }
 .booth.is-entering .booth-scene::before { opacity: 0; }
@@ -417,8 +432,9 @@ html:not(.js) .welcome-letter { visibility: visible; }
 .booth-door { transform-origin: 50% 58%; }
 .booth.is-entering .booth-door { transform: scale(var(--booth-zoom, 2.6)); transition: transform 1.6s cubic-bezier(0.6, 0.02, 0.3, 1); pointer-events: none; }
 .booth.is-entering .booth-scene { z-index: 5; }
-.booth-plaque { margin: 0.4rem auto 0; text-align: center; max-width: 26rem; }
-.booth-plaque-line { display: block; font-family: var(--display); font-style: italic; font-weight: 500; font-size: clamp(1.5rem, 3.6vw, 1.9rem); color: var(--scarlet); }
+.booth-plaque { margin: 0.9rem auto 0; text-align: center; max-width: 26rem; }
+.booth-plaque-line { display: block; font-family: var(--font); font-style: normal; font-weight: 400; text-transform: uppercase; letter-spacing: 0.24em; font-size: 0.78rem; color: var(--ink-soft); }
+@media (max-width: 30rem) { .booth-plaque-line { letter-spacing: 0.16em; font-size: 0.7rem; white-space: nowrap; } }
 /* inside: dark wood, a lamp, the grille, a ledge with a sheet of paper */
 .booth-inside { font-family: var(--font); position: fixed; inset: 0; z-index: 94; overflow-y: auto; -webkit-overflow-scrolling: touch; color: #e9dcc9;
   background:
@@ -582,7 +598,7 @@ html.js .submission .step.is-current { animation: fade-up 0.4s var(--ease) both;
 .about-signoff-img { display: inline-block; width: min(300px, 62%); height: auto; }
 .about-signoff { margin: 1.6em 0 0; text-align: right; font-family: var(--display); font-style: italic; font-weight: 500; font-size: clamp(1.45rem, 3vw, 1.7rem); color: var(--ink-soft); }
 /* Footer */
-body.view-arboretum .site-footer { margin-top: 0.6rem; }
+body.view-arboretum .site-footer, body.view-booth .site-footer { margin-top: 0.6rem; }
 body.view-arboretum .footer-inner { border-top: 0; padding-top: 0.6rem; }
 .site-footer { margin-top: clamp(4rem, 10vw, 6.5rem); padding-block: 1.4rem calc(2.2rem + env(safe-area-inset-bottom, 0px)); }
 .footer-inner { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.6rem; border-top: 1px solid var(--rule); padding-top: 1.4rem; }
@@ -603,7 +619,7 @@ body.view-arboretum .footer-inner { border-top: 0; padding-top: 0.6rem; }
   <nav class="primary-nav wrap" aria-label="Primary">
     <ul>
       <li><a href="#home" data-nav="home"><span>Home</span></a></li>
-      <li><a href="#letters" data-nav="letters"><span>Archive</span></a></li>
+      <li><a href="#letters" data-nav="letters"><span>Publications</span></a></li>
       <li><a href="#arboretum" data-nav="arboretum"><span>The Arboretum</span></a></li>
       <li><a href="#booth" data-nav="booth"><span>Confession Booth</span></a></li>
       <li><a href="#submit" data-nav="submit"><span>Submissions</span></a></li>
@@ -640,7 +656,7 @@ body.view-arboretum .footer-inner { border-top: 0; padding-top: 0.6rem; }
         </div>
       </div>
       <section class="home-section" data-recent hidden aria-labelledby="recent-title">
-        <header class="section-head"><h2 id="recent-title">Published</h2><a class="view-all" href="#letters">The Archive <span aria-hidden="true">→</span></a></header>
+        <header class="section-head"><h2 id="recent-title">Published</h2><a class="view-all" href="#letters">Publications <span aria-hidden="true">→</span></a></header>
         <div class="recent-grid" data-recent-grid></div>
       </section>
     </div>
@@ -739,7 +755,7 @@ body.view-arboretum .footer-inner { border-top: 0; padding-top: 0.6rem; }
           <div class="sent" data-sent hidden tabindex="-1">
             <span data-emblem></span>
             <p class="sent-title">Your letter has been received.</p>
-            <p class="sent-actions"><a class="text-button" href="#letters">The Archive</a><button type="button" class="text-button" data-write-another>Write Another</button></p>
+            <p class="sent-actions"><a class="text-button" href="#letters">Publications</a><button type="button" class="text-button" data-write-another>Write Another</button></p>
           </div>
         </section>
       </form>
@@ -749,7 +765,7 @@ body.view-arboretum .footer-inner { border-top: 0; padding-top: 0.6rem; }
   <!-- ================= THE ARBORETUM: THE LETTER TREE ================= -->
   <section data-view="letters" id="view-letters" aria-labelledby="wall-title">
     <div class="column-wide letters-head">
-      <h1 class="page-title" id="wall-title">Archive</h1>
+      <h1 class="page-title" id="wall-title">Publications</h1>
       <div class="tree-controls" data-tree-controls hidden>
         <div class="filter" data-filter-wrap hidden>
           <button type="button" class="text-button filter-toggle" data-filter-toggle aria-expanded="false" aria-controls="filter-menu">Filter<span class="filter-current" data-filter-label></span></button>
@@ -758,7 +774,7 @@ body.view-arboretum .footer-inner { border-top: 0; padding-top: 0.6rem; }
         <button type="button" class="text-button text-button--scarlet random-button" data-random>Choose a Letter for Me</button>
       </div>
       <ol class="archive" data-archive></ol>
-      <p class="tree-empty" data-tree-empty hidden>No letters have been published yet.</p>
+      <p class="tree-empty" data-tree-empty hidden>Nothing has been published yet.</p>
     </div>
     <p class="visually-hidden" aria-live="polite" data-announce></p>
   </section>
@@ -769,6 +785,10 @@ body.view-arboretum .footer-inner { border-top: 0; padding-top: 0.6rem; }
       <p class="visually-hidden">Letters the editors have chosen to pin to the tree.</p>
       <h1 class="page-title visually-hidden" id="arbor-title">The Arboretum</h1>
       <div class="tree-controls" data-arbor-controls hidden>
+        <div class="confess-index" data-confess-index>
+          <button type="button" class="text-button confess-toggle" data-confess-toggle aria-expanded="false" aria-controls="confess-list">All Confessions <span class="confess-caret" aria-hidden="true"></span></button>
+          <div class="confess-panel" id="confess-list" data-confess-panel hidden><ol class="confess-list" data-confess-list></ol></div>
+        </div>
         <button type="button" class="text-button text-button--scarlet random-button" data-random data-arbor-random>Choose a Letter for Me</button>
       </div>
     </div>
@@ -790,7 +810,7 @@ body.view-arboretum .footer-inner { border-top: 0; padding-top: 0.6rem; }
     <div class="booth" data-booth>
       <div class="booth-scene" data-booth-scene>
         <button type="button" class="booth-door" data-booth-enter aria-label="Enter the confession booth"><span class="booth-svg" data-booth-svg aria-hidden="true"></span></button>
-        <p class="booth-plaque" aria-hidden="true"><span class="booth-plaque-line">Step inside</span></p>
+        <p class="booth-plaque" aria-hidden="true"><span class="booth-plaque-line">Tap the curtains to enter</span></p>
       </div>
     </div>
     <div class="booth-inside" data-booth-inside hidden role="dialog" aria-modal="true" aria-labelledby="booth-inside-title">
@@ -894,7 +914,7 @@ body.view-arboretum .footer-inner { border-top: 0; padding-top: 0.6rem; }
        data-excerpt=""                          optional, shown on the homepage
        data-artwork="" data-artwork-alt=""      optional image URL and description
        data-lipstick=""                         optional: a colour A–F, a kiss shape 1–3, or both, e.g. "C2"
-       (confessions are pinned to the tree in the Arboretum; everything published is in the Archive)
+       (confessions are pinned to the tree in the Arboretum; everything else appears under Publications)
        data-status="published">
        <p>The text of the letter, in ordinary paragraphs.</p>
      </template>
@@ -967,7 +987,7 @@ body.view-arboretum .footer-inner { border-top: 0; padding-top: 0.6rem; }
 <template data-letter
   data-slug="angel-lust"
   data-title="Angel Lust"
-  data-anonymous
+  data-author="Toni"
   data-category="fiction"
   data-date="2026-10-23"
   data-status="published"
@@ -1202,6 +1222,7 @@ const letters = $$('#published-letters template[data-letter]')
   .sort((a, b) => (b.date ? b.date.getTime() : 0) - (a.date ? a.date.getTime() : 0));
 const bySlug = new Map(letters.map((l) => [l.slug, l]));
 const arborLetters = letters.filter((l) => l.department === 'confessions');
+const publications = letters.filter((l) => l.department !== 'confessions');
 const fmtDate = (d) => (d && !isNaN(d) ? d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }) : '');
 const announcer = $('[data-announce]');
 const announce = (m) => { announcer.textContent = ''; setTimeout(() => (announcer.textContent = m), 30); };
@@ -1237,7 +1258,7 @@ const Archive = (() => {
   const list = $('[data-archive]');
   const items = [], byItem = new Map();
   let filter = 'all';
-  letters.forEach((l) => {
+  publications.forEach((l) => {
     const rand = seeded(hashString(`row:${l.slug}`));
     const it = { slug: l.slug, letter: l, tilt: f2(-6 + rand() * 9), paper: PAPERS[Math.floor(rand() * 4)], hidden: false, pin: el('span') };
     it.el = el('li', 'archive-item'); it.el.dataset.slug = l.slug;
@@ -1829,15 +1850,29 @@ void main() {
 (function arborControls() {
   if (!arborLetters.length) { $('[data-arbor-empty]').hidden = false; $$('[data-turn]').forEach((b) => (b.hidden = true)); return; }
   $('[data-arbor-controls]').hidden = false;
+  { // the dropdown of every confession
+    const toggle = $('[data-confess-toggle]'), panel = $('[data-confess-panel]'), list = $('[data-confess-list]'), wrap = $('[data-confess-index]');
+    arborLetters.forEach((l, i) => {
+      const li = el('li'), a = el('a'); a.href = `#letters/${l.slug}`;
+      a.append(el('span', 'confess-num', String(arborLetters.length - i)), el('span', 'confess-title', l.title), el('span', 'confess-date', fmtDate(l.date) || ''));
+      li.append(a); list.append(li);
+    });
+    const setOpen = (on) => { panel.hidden = !on; toggle.setAttribute('aria-expanded', String(on)); };
+    toggle.addEventListener('click', () => setOpen(panel.hidden));
+    list.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false); });
+    document.addEventListener('click', (e) => { if (!panel.hidden && !wrap.contains(e.target)) setOpen(false); });
+    wrap.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) { e.stopPropagation(); setOpen(false); toggle.focus(); } });
+  }
   if (arborLetters.length === 1) $('[data-arbor-random]').textContent = 'Open the Letter';
 })();
 
 /* Filters, and the empty state */
 (function treeControls() {
-  if (!letters.length) { $('[data-tree-empty]').hidden = false; return; }
+  if (!publications.length) { $('[data-tree-empty]').hidden = false; return; }
   $('[data-tree-controls]').hidden = false;
-  if (letters.length === 1) $('[data-random]').textContent = 'Open the Letter';
-  const present = DEPARTMENTS.filter((d) => letters.some((l) => l.department === d.id));
+  if (publications.length === 1) $('[data-random]').textContent = 'Open the Piece';
+  else $('[data-random]').textContent = 'Choose a Piece for Me';
+  const present = DEPARTMENTS.filter((d) => d.id !== 'confessions' && publications.some((l) => l.department === d.id));
   if (present.length > 1) {
     const wrap = $('[data-filter-wrap]'), toggle = $('[data-filter-toggle]'), menu = $('[data-filters]');
     const setOpen = (on) => { menu.hidden = !on; toggle.setAttribute('aria-expanded', String(on)); };
@@ -2035,14 +2070,14 @@ Reader = (() => {
   }
 
   async function open(slug, { push = true } = {}) {
-    const l = bySlug.get(slug), it = Tree.item(slug);
+    const l = bySlug.get(slug), home = Arbor.item(slug) ? 'arboretum' : 'letters', it = (home === 'arboretum' ? Arbor : Archive).item(slug);
     if (!l || !it) return;
     if (isOpen()) { if (slug !== current) await browseTo(slug, 1); return; }
     if (busy) return;
     busy = true; lastFocus = document.activeElement;
     const motion = !reduced();
     try {
-      const room = View.current() === 'arboretum' && Arbor.item(slug) ? 'arboretum' : 'letters';
+      const room = home;
       if (View.current() !== room) { View.show(room, { scroll: true }); await frame(); await frame(); }
       base = room;
       Tree.start();
@@ -2139,6 +2174,7 @@ Reader = (() => {
 
   async function browseTo(slug, dir) {
     if (busy || !isOpen() || slug === current) return;
+    if ((Arbor.item(slug) ? 'arboretum' : 'letters') !== base) { await close(); return open(slug); }
     busy = true;
     const l = bySlug.get(slug), motion = !reduced();
     try {
@@ -2509,8 +2545,8 @@ const Booth = (() => {
   const scene = $('[data-booth-scene]'), plaque = $('.booth-plaque');
   function fit() {
     if (View.current() !== 'booth') return;
-    const top = scene.getBoundingClientRect().top + window.scrollY, below = (plaque ? plaque.offsetHeight : 0) + 28;
-    root.style.setProperty('--booth-room', Math.max(260, window.innerHeight * 0.68, window.innerHeight - top - below) + 'px');
+    const top = scene.getBoundingClientRect().top + window.scrollY, below = (plaque ? plaque.offsetHeight + 14 : 0) + 22;
+    root.style.setProperty('--booth-room', Math.max(260, window.innerHeight - top - below) + 'px');
   }
   window.addEventListener('resize', fit); document.addEventListener('viewchange', fit); logoReady.then(() => setTimeout(fit, 0));
   const page = [$('[data-header]'), $('#main'), $('.site-footer')];
@@ -2632,7 +2668,7 @@ $$('[data-random]').forEach((b) => b.addEventListener('click', chooseForMe));
    Addresses: #home, #submit, #letters, #letters/<slug>, #about
    ============================================================ */
 const header = $('[data-header]');
-const TITLES = { booth: 'The Confession Booth — The Scarlet Letter', home: 'The Scarlet Letter', submit: 'Submissions — The Scarlet Letter', letters: 'Archive — The Scarlet Letter', arboretum: 'The Arboretum — The Scarlet Letter', about: 'Meet the Founders — The Scarlet Letter' };
+const TITLES = { booth: 'The Confession Booth — The Scarlet Letter', home: 'The Scarlet Letter', submit: 'Submissions — The Scarlet Letter', letters: 'Publications — The Scarlet Letter', arboretum: 'The Arboretum — The Scarlet Letter', about: 'Meet the Founders — The Scarlet Letter' };
 let ignorePop = false, restoreFocus = null;
 const View = (() => {
   let cur = null;
@@ -2646,6 +2682,7 @@ const View = (() => {
       document.title = TITLES[view];
       if (view === 'arboretum') Arbor.start(); else Arbor.stop();
       document.body.classList.toggle('view-arboretum', view === 'arboretum');
+      document.body.classList.toggle('view-booth', view === 'booth');
       if (view !== 'booth' && typeof Booth !== 'undefined') Booth.leave(true);
       const first = cur === null; cur = view;
       document.dispatchEvent(new CustomEvent('viewchange', { detail: view }));
@@ -2664,7 +2701,7 @@ function parse(hash) {
 }
 function navigate(hash) {
   const { view, slug, department } = parse(hash);
-  if (slug) { if (bySlug.has(slug)) { if (view === 'arboretum' && Arbor.item(slug) && View.current() !== 'arboretum' && !Reader.isOpen()) View.show('arboretum'); Reader.open(slug); } return; }
+  if (slug) { if (bySlug.has(slug)) { if (Arbor.item(slug) && View.current() !== 'arboretum' && !Reader.isOpen()) View.show('arboretum'); Reader.open(slug); } return; }
   View.show(view, { push: true });
   if (view === 'letters' && department) Tree.setFilter(department);
 }
@@ -2672,7 +2709,7 @@ function route({ fromHistory = false } = {}) {
   const { view, slug, department } = parse(Hist.hash());
   if (slug && bySlug.has(slug)) {
     if (Reader.isOpen()) Reader.browseTo(slug, 1);
-    else { if (view === 'arboretum' && Arbor.item(slug)) View.show('arboretum', { scroll: !fromHistory }); Reader.open(slug, { push: false }); }
+    else { if (Arbor.item(slug)) View.show('arboretum', { scroll: !fromHistory }); Reader.open(slug, { push: false }); }
     return;
   }
   if (Reader.isOpen()) {
