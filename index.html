@@ -161,9 +161,7 @@ html:not(.js) [data-view]:target { display: block; }
 .letter-body > .ln-c { text-align: center; }
 .letter-body > .ln-caps { font-weight: 600; letter-spacing: 0.01em; }
 /* lines that must keep the author's own line endings: never wrap, shrink together to fit */
-.letter-body > .ln-fit { white-space: nowrap; font-size: calc(var(--fitn, 1) * 1em); line-height: calc(1.64em / var(--fitn, 1)); }
-.letter-body > .ln-fit + .ln-fit, .letter-body > * + .ln-fit { margin-top: calc(1.64em / var(--fitn, 1)); }
-.letter-body > .ln-fit.is-wrapping { white-space: normal; }
+.letter-body > .ln-fit { white-space: nowrap; }
 .letter-body > .ln-num { padding-left: 2.4em; text-indent: -1.5em; }
 .letter-body > .ln-num::first-letter { letter-spacing: 0; }
 .letter-body > .ln-break { margin-top: calc(var(--lh) * 2); }
@@ -399,6 +397,8 @@ html:not(.js) .welcome-letter { visibility: visible; }
 .sheet.is-shown { opacity: 1; }
 /* a piece the author laid out on a full page gets a full page's width, so her line endings and margins hold */
 .sheet.sheet--page { max-width: 62rem; }
+@media (max-width: 40rem) { .sheet.sheet--page { --px: 0.9rem; } }
+.sheet--page .letter-body { font-size: calc(var(--pagen, 1) * 1em); }
 .letter-head { text-align: center; margin-bottom: clamp(1.8rem, 5vw, 2.8rem); }
 .letter-title { font-family: var(--display); font-weight: 500; font-size: clamp(2.2rem, 5.8vw, 3.3rem); line-height: 1.1; margin: 0.5rem 0 0.7rem; text-wrap: balance; }
 .letter-byline { margin: 0; font-style: italic; color: var(--ink-faint); }
@@ -2188,17 +2188,16 @@ Reader = (() => {
     sheet.classList.toggle('sheet--page', !!$('.letter-body > .ln-fit, .letter-body > .ln-num', sheet));
     requestAnimationFrame(fitLines);
   }
-  /* lines marked ln-fit keep the author's line endings: they share one size, small enough that the longest fits */
+  /* a piece laid out as a page: if its longest unbreakable line will not fit, the whole piece is set smaller, together,
+     like a page held further away, so every line ending, indent and centring stays the author's */
   function fitLines() {
-    const lines = $$('.letter-body > .ln-fit', sheet); if (!lines.length) return;
-    const body = $('.letter-body', sheet);
-    lines.forEach((p) => { p.classList.remove('is-wrapping'); p.style.removeProperty('--fitn'); });
+    const body = $('.letter-body', sheet); if (!body || !sheet.classList.contains('sheet--page')) return;
+    body.style.removeProperty('--pagen');
+    const lines = $$('.ln-fit', body); if (!lines.length) return;
     const avail = lines[0].clientWidth; if (!avail) return;
     let scale = 1;
     lines.forEach((p) => { const range = document.createRange(); range.selectNodeContents(p); const w = range.getBoundingClientRect().width; if (w > avail) scale = Math.min(scale, avail / w); });
-    scale = Math.floor(scale * 1000) / 1000 * 0.995;
-    if (scale < 0.62) lines.forEach((p) => p.classList.add('is-wrapping'));
-    else if (scale < 1) lines.forEach((p) => p.style.setProperty('--fitn', String(scale)));
+    if (scale < 1) body.style.setProperty('--pagen', String(Math.floor(scale * 995) / 1000));
   }
   window.addEventListener('resize', () => { if (isOpen()) fitLines(); });
   function showOverlay() {
