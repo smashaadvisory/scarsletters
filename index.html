@@ -24,7 +24,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='13' width='56' height='38' rx='2' fill='%23f4e8d2' stroke='%233a2a28' stroke-width='2.6'/%3E%3Cpath d='M5 14 32 35 59 14' fill='none' stroke='%233a2a28' stroke-width='2.6' stroke-linejoin='round'/%3E%3Cpath d='M22 37c3-4 6-5 10-2 4-3 7-2 10 2-3 5-6 7-10 7s-7-2-10-7z' fill='%23a63846'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Noto+Serif+Bengali:wght@400;600&display=swap" />
 <style>
 /* ============================================================
    THE SCARLET LETTER
@@ -32,8 +32,8 @@
    room — the letter tree — and the letter-mailing desk.
    ============================================================ */
 :root {
-  --font: 'EB Garamond', Garamond, 'Adobe Garamond Pro', 'Garamond Premier Pro', Georgia, serif;
-  --display: 'Cormorant Garamond', 'EB Garamond', Garamond, Georgia, serif;
+  --font: 'EB Garamond', Garamond, 'Adobe Garamond Pro', 'Garamond Premier Pro', 'Noto Serif Bengali', Georgia, serif;
+  --display: 'Cormorant Garamond', 'EB Garamond', Garamond, 'Noto Serif Bengali', Georgia, serif;
   --letter: #f8e8e2;
   --letter-deep: #f1dcd4;
   --letter-rule: rgba(166, 56, 70, 0.17);
@@ -157,6 +157,13 @@ html:not(.js) [data-view]:target { display: block; }
 .letter-body > * + * { margin-top: var(--lh); }
 .letter-body > p { margin-bottom: 0; }
 .letter-head { border-bottom: 1px solid var(--letter-margin); padding-bottom: 1.2rem; }
+/* pieces set line by line, as the author laid them out */
+.letter-body > .ln-c { text-align: center; }
+.letter-body > .ln-caps { font-weight: 600; letter-spacing: 0.01em; }
+.letter-body > .ln-num { padding-left: 1.6em; text-indent: -1.4em; }
+.letter-body > .ln-num::first-letter { letter-spacing: 0; }
+.letter-body > .ln-break { margin-top: calc(var(--lh) * 2); }
+.letter-body > .ln-mark { line-height: inherit; color: var(--ink-soft); }
 
 /* Home */
 [data-view='home'] { overflow-x: clip; }
@@ -920,6 +927,81 @@ body.view-arboretum .footer-inner { border-top: 0; padding-top: 0.6rem; }
      </template>
      ============================================================ -->
 <div id="published-letters" hidden>
+<template data-letter
+  data-slug="in-bangla"
+  data-title="In বাংলা:"
+  data-author="Amber Isabella"
+  data-category="poetry"
+  data-date="2026-11-11"
+  data-status="published">
+  <p class="ln-caps">YOU SAID “HELLO, I’M MOLDY, IT’S, IT’S NICE TO MEET YOU”</p>
+  <p class="ln-caps">AND SMILED COYLY AND KICKED AT THE GROUND</p>
+  <p class="ln-caps">YOU SAID “I FEEL LIKE A MONSTER”</p>
+  <p class="ln-caps">AND ZONED OUT WITH GLAZED OVER EYES AND YOUR LIPS PARTED, SLOW HEAVY BREATHS</p>
+  <p class="ln-num">1. Are you what you say you feel like?</p>
+  <p>in English: Monster → in Bangla: বিস্ময়কর প্রাণী (bismoykar prani)</p>
+  <p class="ln-c ln-mark">⤶</p>
+  <p>in English: Amazing creature → in Bangla: অসাধারণ প্রাণী (osadharon prani)</p>
+  <p class="ln-c ln-mark">⤶</p>
+  <p class="ln-c">in English: Extraordinary creature</p>
+  <p class="ln-c">in Bangla:</p>
+  <p>অসাধারণ প্রাণী একটি বাংলা শব্দবন্ধ, যার অর্থ অসাধারণ বা অদ্ভুত প্রাণী পৃথিবীর বুকে এমন কিছু প্রাণী রয়েছে যাদের জীবনধারা, শারীরিক গঠন বা ক্ষমতা আসলেই অবিশ্বাস্য। (osadharon prani ekti bangla shobdobondh, jaar ortho osadharon baa advuto prani prithibir buke emon kichu prani royeche jader jibondhara, sharirik gathon baa khamota asolei abiswasyo.)</p>
+  <p class="ln-c">In English:</p>
+  <p>'Asadharan prani' is a Bengali phrase meaning 'extraordinary' or 'strange' creatures. There are animals on Earth whose lifestyles, physical structures, or abilities are truly incredible, unbelievable.</p>
+  <p class="ln-num ln-break">2. Are you who you say you are?</p>
+  <p>in English: Moldy → in Bangla: ক্লান্তিকর (tedious, exhausting, tiring, tiresome, boring, moldy)</p>
+  <p class="ln-c ln-mark">⤶</p>
+  <p class="ln-c">in English: Tiresome</p>
+  <p>in English: Moldy → in Bangla: অচল (obsolete, untenable, firm, invalid, static, moldy)</p>
+  <p class="ln-c ln-mark">⤶</p>
+  <p class="ln-c">in English: Non-functional</p>
+  <p class="ln-c ln-mark">⤶</p>
+  <p class="ln-c">In Bangla: অকার্যকর (ineffective)</p>
+  <p class="ln-c ln-mark">⤶</p>
+  <p class="ln-c">in English: Ineffective</p>
+  <p class="ln-c">in বাংলা:</p>
+  <p class="ln-c">অকার্যকর (void, invalid, impractical, null and void, useless) or ব্যর্থ (unsuccessful, vain, futile, naught, abortive, hopeless) or অক্ষম (impotent, disabled, unable, incapable, helpless, powerless) or অফলপ্রসূ (sterile, unavailing, bootless)</p>
+  <p class="ln-num ln-break">3. My grief is confounding</p>
+  <p>in English: Confounding → in Bangla: বিভ্রান্তিকর (bivrantikar)</p>
+  <p class="ln-c ln-mark">⤶</p>
+  <p>in Bangla: বিভ্রান্তিকর → in English: Confusing</p>
+  <p class="ln-c ln-mark">⤶</p>
+  <p class="ln-c">I further translate the English word “confounding” into বাংলা:</p>
+  <p class="ln-c">হতবুদ্ধি করা (befuddle, baffle, puzzle, stupefy, embarrass) or মিশ্রিত করা (mix, mingle, jumble, compound, medley) or বিশৃঙ্খল করা (flurry, confuse, disarrange, disorder, disorganize) or ভুল করা (make a mistake, err, mistake, nod, flounder, blunder) or বিস্মিত করা (astonish, astound, amaze) or ব্যর্থ করা (thwart, elude, baffle, frustrate, defeat) or ধাঁধা দেত্তয়া (hoodwink, bamboozle) or ধাঁধা লাগান (daze, bewilder, puzzle, mystify, hoodwink) or কুণ্ঠিত করা (abash, bewilder, confuse, disconcert)</p>
+  <p class="ln-num ln-break">4. We knew and saw the same things together.</p>
+  <p>in English: We knew → in Bangla: আমরা জানতাম (amra jantam)</p>
+  <p>in English: We saw → In Bangla: আমরা দেখলাম (amra dekhlam)</p>
+  <p class="ln-c ln-mark">⤶</p>
+  <p>in English: The same things together →</p>
+  <p>in Bangla: একই জিনিসগুলো একসাথে (eki jinisgulo aksathe) →</p>
+  <p>in English: The same things together</p>
+  <p class="ln-c ln-mark">⤶</p>
+  <p>in English: We were schizoaffective patients together. →</p>
+  <p>in Bangla: আমরা দুজনেই সিজোঅ্যাফেক্টিভ রোগী ছিল (amra dujonei sizoafective rogi chilam.) →</p>
+  <p>in English: We were both schizoaffective patients.</p>
+  <p class="ln-c ln-mark">⤶</p>
+  <p>in English: We bled on each other. →</p>
+  <p>in Bangla: আমরা একে অপরের ওপর রক্ত ঝরিয়েছি।(amra eke oporer opor rakta jhoriyechi.) →</p>
+  <p>in English: We have shed each other’s blood.</p>
+  <p class="ln-num ln-break">5. Are you in the ether?</p>
+  <p>in English: Ether → In Bangla: ইথার</p>
+  <p>or, in Bangla: নির্মল আকাশ → in English: Clear sky</p>
+  <p>or, in Bangla: তরল ঔষধ-বিশেষ → in English: A specific type of liquid medicine</p>
+  <p class="ln-c ln-mark">⤶</p>
+  <p>in English: I will apply my own saliva to my hormonal acne as medicine like your grandmother taught you to do. →</p>
+  <p>in Bangla: তোমার ঠাকুমা তোমাকে যেমনটা শিখিয়েছিলেন, আমিও আমার হরমোনজনিত ব্রণে ওষুধ হিসেবে নিজের লালা লাগাবো। (tomar thakuma tomake jemonta sikhiyechilen, amio aamar hormonejanito brone oshudh hishebe nijer lala lagabo.) →</p>
+  <p>in English: Just like your grandmother taught you, I will also apply my own saliva as medicine for my hormonal acne.</p>
+  <p class="ln-num ln-break">6. What did you do?</p>
+  <p class="ln-c">in Bangla: আত্মহত্যা → in English: Suicide</p>
+  <p class="ln-c">in Bangla: আত্মঘাত → in English: Suicide</p>
+  <p class="ln-c">in Bangla: আত্মহত্যাকারী → in English: Suicide</p>
+  <p class="ln-c">in Bangla: আত্মহত্যা করা → in English: To commit suicide</p>
+  <p class="ln-c">in Bangla: অপমৃত্যু → in English: Untimely death</p>
+  <p class="ln-c">in Bangla: কাম্য-মরণ → in English: Death by will</p>
+  <p class="ln-c">in English: You killed yourself. → in Bangla: তুমি আত্মহত্যা করেছ।</p>
+  <p class="ln-c">in English: You took your own life. → তুমি আত্মহত্যা করেছ।</p>
+  <p class="ln-c">You committed suicide. → তুমি আত্মহত্যা করেছো।</p>
+</template>
 <template data-letter
   data-slug="for-an-anarchist"
   data-title="For an Anarchist"
