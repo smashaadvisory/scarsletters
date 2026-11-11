@@ -160,7 +160,11 @@ html:not(.js) [data-view]:target { display: block; }
 /* pieces set line by line, as the author laid them out */
 .letter-body > .ln-c { text-align: center; }
 .letter-body > .ln-caps { font-weight: 600; letter-spacing: 0.01em; }
-.letter-body > .ln-num { padding-left: 1.6em; text-indent: -1.4em; }
+/* lines that must keep the author's own line endings: never wrap, shrink together to fit */
+.letter-body > .ln-fit { white-space: nowrap; font-size: calc(var(--fitn, 1) * 1em); line-height: calc(1.64em / var(--fitn, 1)); }
+.letter-body > .ln-fit + .ln-fit, .letter-body > * + .ln-fit { margin-top: calc(1.64em / var(--fitn, 1)); }
+.letter-body > .ln-fit.is-wrapping { white-space: normal; }
+.letter-body > .ln-num { padding-left: 2.4em; text-indent: -1.5em; }
 .letter-body > .ln-num::first-letter { letter-spacing: 0; }
 .letter-body > .ln-break { margin-top: calc(var(--lh) * 2); }
 .letter-body > .ln-mark { line-height: inherit; color: var(--ink-soft); }
@@ -393,6 +397,8 @@ html:not(.js) .welcome-letter { visibility: visible; }
 .sheet-wrap { padding: calc(4.4rem + env(safe-area-inset-top, 0px)) max(10px, env(safe-area-inset-right, 0px)) calc(6.5rem + env(safe-area-inset-bottom, 0px)) max(10px, env(safe-area-inset-left, 0px)); min-height: 100%; }
 .sheet { --px: clamp(1.3rem, 6vw, 4.2rem); position: relative; width: 100%; max-width: 44rem; margin-inline: auto; padding: clamp(2rem, 6vw, 3.4rem) var(--px) clamp(2.2rem, 5vw, 3.2rem); background: var(--letter) radial-gradient(120% 90% at 30% 20%, rgba(255, 250, 246, 0.55), rgba(255, 250, 246, 0) 70%); box-shadow: 0 30px 60px -28px rgba(20, 10, 10, 0.55), 0 0 0 1px rgba(58, 42, 40, 0.1); opacity: 0; }
 .sheet.is-shown { opacity: 1; }
+/* a piece the author laid out on a full page gets a full page's width, so her line endings and margins hold */
+.sheet.sheet--page { max-width: 62rem; }
 .letter-head { text-align: center; margin-bottom: clamp(1.8rem, 5vw, 2.8rem); }
 .letter-title { font-family: var(--display); font-weight: 500; font-size: clamp(2.2rem, 5.8vw, 3.3rem); line-height: 1.1; margin: 0.5rem 0 0.7rem; text-wrap: balance; }
 .letter-byline { margin: 0; font-style: italic; color: var(--ink-faint); }
@@ -934,10 +940,10 @@ body.view-arboretum .footer-inner { border-top: 0; padding-top: 0.6rem; }
   data-category="poetry"
   data-date="2026-11-11"
   data-status="published">
-  <p class="ln-caps">YOU SAID “HELLO, I’M MOLDY, IT’S, IT’S NICE TO MEET YOU”</p>
-  <p class="ln-caps">AND SMILED COYLY AND KICKED AT THE GROUND</p>
-  <p class="ln-caps">YOU SAID “I FEEL LIKE A MONSTER”</p>
-  <p class="ln-caps">AND ZONED OUT WITH GLAZED OVER EYES AND YOUR LIPS PARTED, SLOW HEAVY BREATHS</p>
+  <p class="ln-caps ln-fit">YOU SAID “HELLO, I’M MOLDY, IT’S, IT’S NICE TO MEET YOU”</p>
+  <p class="ln-caps ln-fit">AND SMILED COYLY AND KICKED AT THE GROUND</p>
+  <p class="ln-caps ln-fit">YOU SAID “I FEEL LIKE A MONSTER”</p>
+  <p class="ln-caps ln-fit">AND ZONED OUT WITH GLAZED OVER EYES AND YOUR LIPS PARTED, SLOW<br>HEAVY BREATHS</p>
   <p class="ln-num">1. Are you what you say you feel like?</p>
   <p>in English: Monster → in Bangla: বিস্ময়কর প্রাণী (bismoykar prani)</p>
   <p class="ln-c ln-mark">⤶</p>
@@ -2179,7 +2185,22 @@ Reader = (() => {
     const many = Tree.ring().length > 1;
     $$('[data-prev], [data-next]', root).forEach((b) => (b.hidden = !many));
     document.title = `${l.title} — The Scarlet Letter`;
+    sheet.classList.toggle('sheet--page', !!$('.letter-body > .ln-fit, .letter-body > .ln-num', sheet));
+    requestAnimationFrame(fitLines);
   }
+  /* lines marked ln-fit keep the author's line endings: they share one size, small enough that the longest fits */
+  function fitLines() {
+    const lines = $$('.letter-body > .ln-fit', sheet); if (!lines.length) return;
+    const body = $('.letter-body', sheet);
+    lines.forEach((p) => { p.classList.remove('is-wrapping'); p.style.removeProperty('--fitn'); });
+    const avail = lines[0].clientWidth; if (!avail) return;
+    let scale = 1;
+    lines.forEach((p) => { const range = document.createRange(); range.selectNodeContents(p); const w = range.getBoundingClientRect().width; if (w > avail) scale = Math.min(scale, avail / w); });
+    scale = Math.floor(scale * 1000) / 1000 * 0.995;
+    if (scale < 0.62) lines.forEach((p) => p.classList.add('is-wrapping'));
+    else if (scale < 1) lines.forEach((p) => p.style.setProperty('--fitn', String(scale)));
+  }
+  window.addEventListener('resize', () => { if (isOpen()) fitLines(); });
   function showOverlay() {
     root.hidden = false; document.documentElement.classList.add('is-locked');
     page.forEach((n) => { if (n) { n.setAttribute('aria-hidden', 'true'); if ('inert' in n) n.inert = true; } });
