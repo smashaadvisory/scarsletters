@@ -399,6 +399,12 @@ html:not(.js) .welcome-letter { visibility: visible; }
 .sheet.sheet--page { max-width: 62rem; }
 @media (max-width: 40rem) { .sheet.sheet--page { --px: 0.9rem; } }
 .sheet--page .letter-body { font-size: calc(var(--pagen, 1) * 1em); }
+.letter-body.is-narrow { font-size: 0.94em; }
+.letter-body.is-narrow > .ln-fit { white-space: normal; }
+.letter-body.is-narrow > p:not(.ln-c):not(.ln-num) { padding-left: 1.1em; text-indent: -1.1em; }
+.letter-body.is-narrow > .ln-caps { font-size: 0.9em; line-height: calc(1.64em / 0.9); }
+.letter-body.is-narrow > .ln-caps + .ln-caps { margin-top: calc(1.64em / 0.9); }
+.letter-body.is-narrow > .ln-num { padding-left: 1.9em; text-indent: -1.3em; }
 .letter-head { text-align: center; margin-bottom: clamp(1.8rem, 5vw, 2.8rem); }
 .letter-title { font-family: var(--display); font-weight: 500; font-size: clamp(2.2rem, 5.8vw, 3.3rem); line-height: 1.1; margin: 0.5rem 0 0.7rem; text-wrap: balance; }
 .letter-byline { margin: 0; font-style: italic; color: var(--ink-faint); }
@@ -2195,9 +2201,13 @@ Reader = (() => {
     body.style.removeProperty('--pagen');
     const lines = $$('.ln-fit', body); if (!lines.length) return;
     const avail = lines[0].clientWidth; if (!avail) return;
+    body.classList.remove('is-narrow');
     let scale = 1;
     lines.forEach((p) => { const range = document.createRange(); range.selectNodeContents(p); const w = range.getBoundingClientRect().width; if (w > avail) scale = Math.min(scale, avail / w); });
-    if (scale < 1) body.style.setProperty('--pagen', String(Math.floor(scale * 995) / 1000));
+    // a little smaller is fine; much smaller is unreadable, so on a phone the text stays readable and a long line
+    // wraps with its continuation indented, which keeps each of the author's lines visibly one line
+    if (scale >= 0.8) { if (scale < 1) body.style.setProperty('--pagen', String(Math.floor(scale * 995) / 1000)); }
+    else body.classList.add('is-narrow');
   }
   window.addEventListener('resize', () => { if (isOpen()) fitLines(); });
   function showOverlay() {
