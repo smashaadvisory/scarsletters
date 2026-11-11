@@ -166,6 +166,8 @@ html:not(.js) [data-view]:target { display: block; }
 .letter-body > .ln-num::first-letter { letter-spacing: 0; }
 .letter-body > .ln-break { margin-top: calc(var(--lh) * 2); }
 .letter-body > .ln-mark { line-height: inherit; color: var(--ink-soft); }
+.letter-body .ret { display: inline-block; width: 1.05em; height: 0.95em; vertical-align: -0.12em; }
+.letter-body .ret svg { display: block; width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.35; stroke-linecap: round; stroke-linejoin: round; }
 
 /* Home */
 [data-view='home'] { overflow-x: clip; }
@@ -400,10 +402,9 @@ html:not(.js) .welcome-letter { visibility: visible; }
 @media (max-width: 40rem) { .sheet.sheet--page { --px: 0.9rem; } }
 .sheet--page .letter-body { font-size: calc(var(--pagen, 1) * 1em); }
 .letter-body.is-narrow { font-size: 0.94em; }
-.letter-body.is-narrow > .ln-fit { white-space: normal; }
-.letter-body.is-narrow > p:not(.ln-c):not(.ln-num) { padding-left: 1.1em; text-indent: -1.1em; }
-.letter-body.is-narrow > .ln-caps { font-size: 0.9em; line-height: calc(1.64em / 0.9); }
-.letter-body.is-narrow > .ln-caps + .ln-caps { margin-top: calc(1.64em / 0.9); }
+.letter-body.is-narrow > .ln-caps { font-size: calc(var(--capsn, 0.9) * 1em); line-height: calc(1.64em / var(--capsn, 0.9)); letter-spacing: 0; }
+.letter-body.is-narrow > .ln-caps + .ln-caps { margin-top: calc(1.64em / var(--capsn, 0.9)); }
+.letter-body.is-narrow > .ln-fit.is-wrapping { white-space: normal; }
 .letter-body.is-narrow > .ln-num { padding-left: 1.9em; text-indent: -1.3em; }
 .letter-head { text-align: center; margin-bottom: clamp(1.8rem, 5vw, 2.8rem); }
 .letter-title { font-family: var(--display); font-weight: 500; font-size: clamp(2.2rem, 5.8vw, 3.3rem); line-height: 1.1; margin: 0.5rem 0 0.7rem; text-wrap: balance; }
@@ -949,12 +950,12 @@ body.view-arboretum .footer-inner { border-top: 0; padding-top: 0.6rem; }
   <p class="ln-caps ln-fit">YOU SAID “HELLO, I’M MOLDY, IT’S, IT’S NICE TO MEET YOU”</p>
   <p class="ln-caps ln-fit">AND SMILED COYLY AND KICKED AT THE GROUND</p>
   <p class="ln-caps ln-fit">YOU SAID “I FEEL LIKE A MONSTER”</p>
-  <p class="ln-caps ln-fit">AND ZONED OUT WITH GLAZED OVER EYES AND YOUR LIPS PARTED, SLOW<br>HEAVY BREATHS</p>
+  <p class="ln-caps ln-flow">AND ZONED OUT WITH GLAZED OVER EYES AND YOUR LIPS PARTED, SLOW HEAVY BREATHS</p>
   <p class="ln-num">1. Are you what you say you feel like?</p>
   <p>in English: Monster → in Bangla: বিস্ময়কর প্রাণী (bismoykar prani)</p>
-  <p class="ln-c ln-mark">⤶</p>
+  <p class="ln-c ln-mark"><span class="ret" role="img" aria-label="⤶"><svg viewBox="0 0 20 18" aria-hidden="true"><path d="M15.5 2.5v6.2c0 2.2-1.6 3.8-3.8 3.8H4.5"/><path d="M8 9 4.5 12.5 8 16"/></svg></span></p>
   <p>in English: Amazing creature → in Bangla: অসাধারণ প্রাণী (osadharon prani)</p>
-  <p class="ln-c ln-mark">⤶</p>
+  <p class="ln-c ln-mark"><span class="ret" role="img" aria-label="⤶"><svg viewBox="0 0 20 18" aria-hidden="true"><path d="M15.5 2.5v6.2c0 2.2-1.6 3.8-3.8 3.8H4.5"/><path d="M8 9 4.5 12.5 8 16"/></svg></span></p>
   <p class="ln-c">in English: Extraordinary creature</p>
   <p class="ln-c">in Bangla:</p>
   <p>অসাধারণ প্রাণী একটি বাংলা শব্দবন্ধ, যার অর্থ অসাধারণ বা অদ্ভুত প্রাণী পৃথিবীর বুকে এমন কিছু প্রাণী রয়েছে যাদের জীবনধারা, শারীরিক গঠন বা ক্ষমতা আসলেই অবিশ্বাস্য। (osadharon prani ekti bangla shobdobondh, jaar ortho osadharon baa advuto prani prithibir buke emon kichu prani royeche jader jibondhara, sharirik gathon baa khamota asolei abiswasyo.)</p>
@@ -962,36 +963,36 @@ body.view-arboretum .footer-inner { border-top: 0; padding-top: 0.6rem; }
   <p>'Asadharan prani' is a Bengali phrase meaning 'extraordinary' or 'strange' creatures. There are animals on Earth whose lifestyles, physical structures, or abilities are truly incredible, unbelievable.</p>
   <p class="ln-num ln-break">2. Are you who you say you are?</p>
   <p>in English: Moldy → in Bangla: ক্লান্তিকর (tedious, exhausting, tiring, tiresome, boring, moldy)</p>
-  <p class="ln-c ln-mark">⤶</p>
+  <p class="ln-c ln-mark"><span class="ret" role="img" aria-label="⤶"><svg viewBox="0 0 20 18" aria-hidden="true"><path d="M15.5 2.5v6.2c0 2.2-1.6 3.8-3.8 3.8H4.5"/><path d="M8 9 4.5 12.5 8 16"/></svg></span></p>
   <p class="ln-c">in English: Tiresome</p>
   <p>in English: Moldy → in Bangla: অচল (obsolete, untenable, firm, invalid, static, moldy)</p>
-  <p class="ln-c ln-mark">⤶</p>
+  <p class="ln-c ln-mark"><span class="ret" role="img" aria-label="⤶"><svg viewBox="0 0 20 18" aria-hidden="true"><path d="M15.5 2.5v6.2c0 2.2-1.6 3.8-3.8 3.8H4.5"/><path d="M8 9 4.5 12.5 8 16"/></svg></span></p>
   <p class="ln-c">in English: Non-functional</p>
-  <p class="ln-c ln-mark">⤶</p>
+  <p class="ln-c ln-mark"><span class="ret" role="img" aria-label="⤶"><svg viewBox="0 0 20 18" aria-hidden="true"><path d="M15.5 2.5v6.2c0 2.2-1.6 3.8-3.8 3.8H4.5"/><path d="M8 9 4.5 12.5 8 16"/></svg></span></p>
   <p class="ln-c">In Bangla: অকার্যকর (ineffective)</p>
-  <p class="ln-c ln-mark">⤶</p>
+  <p class="ln-c ln-mark"><span class="ret" role="img" aria-label="⤶"><svg viewBox="0 0 20 18" aria-hidden="true"><path d="M15.5 2.5v6.2c0 2.2-1.6 3.8-3.8 3.8H4.5"/><path d="M8 9 4.5 12.5 8 16"/></svg></span></p>
   <p class="ln-c">in English: Ineffective</p>
   <p class="ln-c">in বাংলা:</p>
   <p class="ln-c">অকার্যকর (void, invalid, impractical, null and void, useless) or ব্যর্থ (unsuccessful, vain, futile, naught, abortive, hopeless) or অক্ষম (impotent, disabled, unable, incapable, helpless, powerless) or অফলপ্রসূ (sterile, unavailing, bootless)</p>
   <p class="ln-num ln-break">3. My grief is confounding</p>
   <p>in English: Confounding → in Bangla: বিভ্রান্তিকর (bivrantikar)</p>
-  <p class="ln-c ln-mark">⤶</p>
+  <p class="ln-c ln-mark"><span class="ret" role="img" aria-label="⤶"><svg viewBox="0 0 20 18" aria-hidden="true"><path d="M15.5 2.5v6.2c0 2.2-1.6 3.8-3.8 3.8H4.5"/><path d="M8 9 4.5 12.5 8 16"/></svg></span></p>
   <p>in Bangla: বিভ্রান্তিকর → in English: Confusing</p>
-  <p class="ln-c ln-mark">⤶</p>
+  <p class="ln-c ln-mark"><span class="ret" role="img" aria-label="⤶"><svg viewBox="0 0 20 18" aria-hidden="true"><path d="M15.5 2.5v6.2c0 2.2-1.6 3.8-3.8 3.8H4.5"/><path d="M8 9 4.5 12.5 8 16"/></svg></span></p>
   <p class="ln-c">I further translate the English word “confounding” into বাংলা:</p>
   <p class="ln-c">হতবুদ্ধি করা (befuddle, baffle, puzzle, stupefy, embarrass) or মিশ্রিত করা (mix, mingle, jumble, compound, medley) or বিশৃঙ্খল করা (flurry, confuse, disarrange, disorder, disorganize) or ভুল করা (make a mistake, err, mistake, nod, flounder, blunder) or বিস্মিত করা (astonish, astound, amaze) or ব্যর্থ করা (thwart, elude, baffle, frustrate, defeat) or ধাঁধা দেত্তয়া (hoodwink, bamboozle) or ধাঁধা লাগান (daze, bewilder, puzzle, mystify, hoodwink) or কুণ্ঠিত করা (abash, bewilder, confuse, disconcert)</p>
   <p class="ln-num ln-break">4. We knew and saw the same things together.</p>
   <p>in English: We knew → in Bangla: আমরা জানতাম (amra jantam)</p>
   <p>in English: We saw → In Bangla: আমরা দেখলাম (amra dekhlam)</p>
-  <p class="ln-c ln-mark">⤶</p>
+  <p class="ln-c ln-mark"><span class="ret" role="img" aria-label="⤶"><svg viewBox="0 0 20 18" aria-hidden="true"><path d="M15.5 2.5v6.2c0 2.2-1.6 3.8-3.8 3.8H4.5"/><path d="M8 9 4.5 12.5 8 16"/></svg></span></p>
   <p>in English: The same things together →</p>
   <p>in Bangla: একই জিনিসগুলো একসাথে (eki jinisgulo aksathe) →</p>
   <p>in English: The same things together</p>
-  <p class="ln-c ln-mark">⤶</p>
+  <p class="ln-c ln-mark"><span class="ret" role="img" aria-label="⤶"><svg viewBox="0 0 20 18" aria-hidden="true"><path d="M15.5 2.5v6.2c0 2.2-1.6 3.8-3.8 3.8H4.5"/><path d="M8 9 4.5 12.5 8 16"/></svg></span></p>
   <p>in English: We were schizoaffective patients together. →</p>
   <p>in Bangla: আমরা দুজনেই সিজোঅ্যাফেক্টিভ রোগী ছিল (amra dujonei sizoafective rogi chilam.) →</p>
   <p>in English: We were both schizoaffective patients.</p>
-  <p class="ln-c ln-mark">⤶</p>
+  <p class="ln-c ln-mark"><span class="ret" role="img" aria-label="⤶"><svg viewBox="0 0 20 18" aria-hidden="true"><path d="M15.5 2.5v6.2c0 2.2-1.6 3.8-3.8 3.8H4.5"/><path d="M8 9 4.5 12.5 8 16"/></svg></span></p>
   <p>in English: We bled on each other. →</p>
   <p>in Bangla: আমরা একে অপরের ওপর রক্ত ঝরিয়েছি।(amra eke oporer opor rakta jhoriyechi.) →</p>
   <p>in English: We have shed each other’s blood.</p>
@@ -999,7 +1000,7 @@ body.view-arboretum .footer-inner { border-top: 0; padding-top: 0.6rem; }
   <p>in English: Ether → In Bangla: ইথার</p>
   <p>or, in Bangla: নির্মল আকাশ → in English: Clear sky</p>
   <p>or, in Bangla: তরল ঔষধ-বিশেষ → in English: A specific type of liquid medicine</p>
-  <p class="ln-c ln-mark">⤶</p>
+  <p class="ln-c ln-mark"><span class="ret" role="img" aria-label="⤶"><svg viewBox="0 0 20 18" aria-hidden="true"><path d="M15.5 2.5v6.2c0 2.2-1.6 3.8-3.8 3.8H4.5"/><path d="M8 9 4.5 12.5 8 16"/></svg></span></p>
   <p>in English: I will apply my own saliva to my hormonal acne as medicine like your grandmother taught you to do. →</p>
   <p>in Bangla: তোমার ঠাকুমা তোমাকে যেমনটা শিখিয়েছিলেন, আমিও আমার হরমোনজনিত ব্রণে ওষুধ হিসেবে নিজের লালা লাগাবো। (tomar thakuma tomake jemonta sikhiyechilen, amio aamar hormonejanito brone oshudh hishebe nijer lala lagabo.) →</p>
   <p>in English: Just like your grandmother taught you, I will also apply my own saliva as medicine for my hormonal acne.</p>
@@ -2201,13 +2202,19 @@ Reader = (() => {
     body.style.removeProperty('--pagen');
     const lines = $$('.ln-fit', body); if (!lines.length) return;
     const avail = lines[0].clientWidth; if (!avail) return;
-    body.classList.remove('is-narrow');
+    body.classList.remove('is-narrow'); lines.forEach((p) => p.classList.remove('is-wrapping'));
     let scale = 1;
     lines.forEach((p) => { const range = document.createRange(); range.selectNodeContents(p); const w = range.getBoundingClientRect().width; if (w > avail) scale = Math.min(scale, avail / w); });
     // a little smaller is fine; much smaller is unreadable, so on a phone the text stays readable and a long line
     // wraps with its continuation indented, which keeps each of the author's lines visibly one line
-    if (scale >= 0.8) { if (scale < 1) body.style.setProperty('--pagen', String(Math.floor(scale * 995) / 1000)); }
-    else body.classList.add('is-narrow');
+    if (scale >= 0.8) { if (scale < 1) body.style.setProperty('--pagen', String(Math.floor(scale * 995) / 1000)); return; }
+    body.classList.add('is-narrow'); body.style.removeProperty('--capsn');
+    // on a phone the body text stays readable; only the capitals shrink, just enough that her one-line lines stay one line
+    let caps = 1; const room = lines[0].clientWidth;
+    lines.forEach((p) => { const range = document.createRange(); range.selectNodeContents(p); const w = range.getBoundingClientRect().width / 0.9; if (w > room) caps = Math.min(caps, room / w); });
+    caps = Math.floor(caps * 990) / 1000;
+    if (caps >= 0.68) body.style.setProperty('--capsn', String(caps));
+    else { body.style.setProperty('--capsn', '0.68'); lines.forEach((p) => p.classList.add('is-wrapping')); }
   }
   window.addEventListener('resize', () => { if (isOpen()) fitLines(); });
   function showOverlay() {
